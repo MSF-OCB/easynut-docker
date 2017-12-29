@@ -7,7 +7,7 @@ WORKDIR /data/web
 # Setup
 RUN apk update
 RUN apk upgrade
-RUN apk add --update python python-dev mysql-client mysql-dev build-base gettext git
+RUN apk add --update python python-dev mysql-client mysql-dev build-base gettext git py-pip
 
 # Pull the last base from github and replace requirements and setup 
 # This has to be changed after with a better git repo
