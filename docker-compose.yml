@@ -7,9 +7,10 @@ web:
     - mysql:mysql
     - redis:redis
   env_file: env
-  volumes:
-    - ./web:/data/web
-  command: /usr/bin/gunicorn mydjango.wsgi:application -w 2 -b :8000
+  #volumes:
+  #  - ./web:/data/web
+  working_dir: /data/web
+  command: /usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000
 
 nginx:
   restart: always

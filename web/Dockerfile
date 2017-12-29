@@ -33,6 +33,6 @@ RUN apk del -r mysql
 # Remove css static file (Ultimately, the static files should be out of the 
 # git repository and always run the command collectstatic)
 RUN rm /data/web/static/emr/style.css
-RUN python /data/web/manage.py collectstatic
+#RUN python /data/web/manage.py collectstatic
 
 
