@@ -1,0 +1,50 @@
+web:
+  restart: always
+  build: ./web/
+  expose:
+    - "8000"
+  links:
+    - mysql:mysql
+    - redis:redis
+  env_file: env
+  volumes:
+    - ./web:/data/web
+  command: /usr/bin/gunicorn mydjango.wsgi:application -w 2 -b :8000
+
+nginx:
+  restart: always
+  build: ./nginx/
+  ports:
+    - "80:80"
+  volumes_from:
+    - web
+  links:
+    - web:web
+  environment:
+    - VIRTUAL_PROTO=uwsgi
+
+mysql:
+  restart: always
+  image: mysql:latest
+  volumes_from:
+    - data
+  volumes:
+    - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    - ./backups/mysql:/backup
+  env_file:
+    - env
+  expose:
+    - "3306"
+
+redis:
+  restart: always
+  image: redis:latest
+  expose:
+    - "6379"
+
+data:
+  restart: always
+  image: alpine
+  volumes:
+    - /var/lib/mysql
+  command: "true"
