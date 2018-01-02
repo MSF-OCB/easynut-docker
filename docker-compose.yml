@@ -1,51 +1,66 @@
-web:
-  restart: always
-  build: ./web/
-  expose:
-    - "8000"
-  links:
-    - mysql:mysql
-    - redis:redis
-  env_file: env
-  #volumes:
-  #  - ./web:/data/web
-  working_dir: /data/web
-  command: /usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000
-
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes_from:
-    - web
-  links:
-    - web:web
-  environment:
-    - VIRTUAL_PROTO=uwsgi
-
-mysql:
-  restart: always
-  image: mysql:latest
-  volumes_from:
-    - data
-  volumes:
-    - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    - ./backups/mysql:/backup
-  env_file:
-    - env
-  expose:
-    - "3306"
-
-redis:
-  restart: always
-  image: redis:latest
-  expose:
-    - "6379"
-
-data:
-  restart: always
-  image: alpine
-  volumes:
-    - /var/lib/mysql
-  command: "true"
+version: "3"
+services:
+  web:
+    restart: always
+    build: 
+      context: ./web/
+      # Required for django manage.py CLI (settings.py)
+      args:
+        SECRET_KEY: ${SECRET_KEY}
+        DEBUG: ${DEBUG}
+        ALLOWED_HOSTS: ${ALLOWED_HOSTS}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        DB_SERVICE: ${DB_SERVICE}
+        DB_PORT: ${DB_PORT}
+        DATA_DB_NAME: ${DATA_DB_NAME}
+    expose:
+      - "8000"
+    depends_on:
+      - mysql
+      - redis
+    env_file: .env
+    volumes:
+      - django_static:/data/web/easynut/static
+    container_name: easynut_django
+    working_dir: /data/web/easynut
+    command: [sh, -c, "/usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    container_name: easynut_nginx
+    volumes:
+      - django_static:/data/web/easynut/static
+  mysql:
+    restart: always
+    image: mysql:latest
+    volumes:
+      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./backups/mysql:/backup
+      - mysql_data:/var/lib/mysql
+    env_file: .env
+    expose:
+      - "3306"
+    container_name: easynut_mysql
+  redis:
+    restart: always
+    image: redis:latest
+    expose:
+      - "6379"
+    container_name: easynut_redis
+  data:
+    restart: always
+    image: alpine
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: "true"
+    container_name: easynut_data
+volumes:
+  django_static:  
+  mysql_data:
+    driver: local
