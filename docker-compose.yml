@@ -63,4 +63,3 @@ services:
 volumes:
   django_static:  
   mysql_data:
-    driver: local
