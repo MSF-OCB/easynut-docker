@@ -95,7 +95,7 @@ docker container exec easynut_backups /restore.sh /backup/backup.gz.enc
 And replace "backup.gz/enc" but the gunzipped and encrypted (<b>same enc. pass</b>) with the file that you want. 
 <br/><i>(Note: in the container the folder '/backup' refers in the host to the folder "./backups/backups". You can therefore use the CRON backups already there or copy one from the host)</i>
 
-<h3>Known caveats:</h3>
+<h3>Known issues:</h3>
 <ul>
 <li>Easynut github branch: The "new_layout" branch currently used is not adequate for this compose setup.The files "settings.py" and "requirements.txt" are duplicated (the ones in these repository being used here) as the static files are not needed. -> Needs for merging and better git structure</li>
 <li>Redis transparent huge page: This should be configured on the host, <a href="https://docs.mongodb.com/master/tutorial/transparent-huge-pages/">example of script</a></li>
