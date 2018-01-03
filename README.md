@@ -83,8 +83,10 @@ After=docker.service
 
 [Service]
 Restart=on-failure
-ExecStart=/usr/local/bin/docker-compose -f /home/USER/easynut-docker/docker-compose.yml up
-ExecStop=/usr/local/bin/docker-compose -f /home/USER/easynut-docker/docker-compose.yml stop
+TimeoutSec=infinity
+WorkingDirectory=/home/USER/easynut-docker/
+ExecStart=/usr/local/bin/docker-compose up
+ExecStop=/usr/local/bin/docker-compose down
 
 [Install]
 WantedBy=default.target
