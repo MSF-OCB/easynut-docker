@@ -1,9 +1,19 @@
 # easynut-docker
 Docker compose for EasyNut
 
-<h3>Installation steps:</h3>
+<h3>In this README:</h3>
+<ul>
+<li>I. Installation steps</li>
+<li>II. Structure</li>
+<li>III. Environment files</li>
+<li>IV. Databases</li>
+<li>V. Backups</li>
+<li>VI. Known issues</li>
+</ul>
 
-<b>Preparation of the host</b>
+<h3>I. Installation steps:</h3>
+
+<b>I.a) Preparation of the host</b>
 <br/><i>Debian - Tested with fresh ubuntu 16.04 server - Installation of required dependencies: git, docker, docker-compose (v3)</i>
 ```
 sudo apt-get update && sudo apt-get upgrade
@@ -23,7 +33,7 @@ sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-c
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-<b>Preparation of the EasyNut docker compose</b>
+<b>I.b) Preparation of the EasyNut docker compose</b>
 
 First clone this repository and move into it:
 ```
@@ -42,7 +52,7 @@ Build the Docker files
 docker-compose build
 ```
 
-<b>Starting the docker compose</b>
+<b>I.c) Starting the docker compose</b>
 
 Launch docker compose in background
 ```
@@ -57,7 +67,7 @@ Easynut should be available at:
 </ul>
 If first time or data volume deleted, EasyNut is created with a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed on prod. env.</b>). See "Databases" below for custom MySQL import.
 
-<br/><b>Optional: Systemd service</b>
+<br/><b>I.d) Optional: Systemd service</b>
 
 Systemd service for automatically launching docker-compose on startup of the host.
 <br/> First create the service
@@ -93,7 +103,7 @@ If yes, enable the service:
 sudo systemctl enable easynut.service
 ```
 
-<h3>Structure:</h3>
+<h3>II. Structure:</h3>
 
 This project is composed of six services:
 <ul>
@@ -105,7 +115,8 @@ This project is composed of six services:
 <li><a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin/">phpmyadmin</a>: PHPMyAdmin service</li>
 </ul>
 
-<h3>Environment files:</h3>
+<h3>III. Environment files:</h3>
+
 <i>(In the environment file, if using "=", the values should not be surrounded by quotes)</i>
 <ul>
 <li>MYSQL_DATABASE: Django databse. Keep at 'easynut' or change compose and dockerfiles</li>
@@ -122,7 +133,7 @@ This project is composed of six services:
 <li>MAX_BACKUPS: Number of backup to keep. The old ones are automatically deleted</li>
 </ul>
 
-<h3>Databases:</h3>
+<h3>IV. Databases:</h3>
 
 When created for the first time, the MySQL container will execute all the scripts located in 
 <br/>./mysql/docker-entrypoint-initdb.d/ (host)
@@ -135,7 +146,7 @@ If you wish to create easynut with an existing database, delete the file ./mysql
 <li>Note 2: The MySQL data are also persitant through a shared volume "easynutdocker_mysql_data". If you want to rebuild the mysql container with new data, think to delete the volume before hand.</li>
 </ul>
 
-<h3>Backups:</h3>
+<h3>V. Backups:</h3>
 
 The shell scripts used for backups, restore and build are stored in ./backups/. If you modify them be sure to re-build the service.
 
@@ -153,10 +164,9 @@ docker container exec easynut_backups /restore.sh /backup/backup.gz.enc
 And replace "backup.gz/enc" but the gunzipped and encrypted (<b>same enc. pass</b>) with the file that you want. 
 <br/><i>(Note: in the container the folder '/backup' refers in the host to the folder "./backups/backups". You can therefore use the CRON backups already there or copy one from the host)</i>
 
-<h3>Known issues:</h3>
+<h3>VI. Known issues:</h3>
 <ul>
 <li>Easynut github branch: The "new_layout" branch currently used is not adequate for this compose setup.The files "settings.py" and "requirements.txt" are duplicated (the ones in these repository being used here) as the static files are not needed. -> Needs for merging and better git structure</li>
 <li>Redis transparent huge page: This should be configured on the host, <a href="https://docs.mongodb.com/master/tutorial/transparent-huge-pages/">example of script</a></li>
 <li>Security: This compose is not really made for developpement and careful considerations should be made if used in production.</li>
 </ul>
-
