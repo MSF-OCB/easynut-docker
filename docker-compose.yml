@@ -23,7 +23,7 @@ services:
     env_file: .env
     volumes:
       - django_static:/data/web/easynut/static
-      - easynut_backups_v:/opt/shared
+      - ./backups/backups:/opt/shared
     container_name: easynut_django
     working_dir: /data/web/easynut
     command: [sh, -c, "/usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
@@ -66,12 +66,8 @@ services:
     depends_on:
       - mysql 
     volumes:
-      - easynut_backups_v:/backup
+      - ./backups/backups:/backup
     container_name: easynut_backups
 volumes:
   django_static:
-    driver: local
   mysql_data:
-    driver: local
-  easynut_backups_v:
-    driver: local
