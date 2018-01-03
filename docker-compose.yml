@@ -56,7 +56,6 @@ services:
   backups:
     restart: always
     image: alpine
-    restart: always
     build:
       context: ./backups/
       args:
@@ -68,6 +67,17 @@ services:
     volumes:
       - ./backups/backups:/backup
     container_name: easynut_backups
+  phpmyadmin:
+    restart: always
+    image: phpmyadmin/phpmyadmin
+    container_name: easynut_phpmyadmin
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    env_file: .env
+    environment:
+      - PMA_HOST=easynut_mysql
 volumes:
   django_static:
   mysql_data:
