@@ -98,6 +98,7 @@ And replace "backup.gz/enc" but the gunzipped and encrypted (<b>same enc. pass</
 <h3>Known caveats:</h3>
 <ul>
 <li>Easynut github branch: The "new_layout" branch currently used is not adequate for this compose setup.The files "settings.py" and "requirements.txt" are duplicated (the ones in these repository being used here) as the static files are not needed. -> Needs for merging and better git structure</li>
+<li>Redis transparent huge page: This should be configured on the host, <a href="https://docs.mongodb.com/master/tutorial/transparent-huge-pages/">example of script</li>
 <li>Security: This compose is not made for easy developpement environment and proper considerations should be made if use in prod.</li>
 </ul>
 
