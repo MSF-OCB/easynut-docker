@@ -7,7 +7,7 @@ Docker compose for EasyNut
 <li>II. Structure</li>
 <li>III. Environment files</li>
 <li>IV. Databases</li>
-<li>V. Backups</li>
+<li>V. Backups & Restore</li>
 <li>VI. Known issues</li>
 </ul>
 
@@ -146,9 +146,11 @@ If you wish to create easynut with an existing database, delete the file ./mysql
 <li>Note 2: The MySQL data are also persitant through a shared volume "easynutdocker_mysql_data". If you want to rebuild the mysql container with new data, think to delete the volume before hand.</li>
 </ul>
 
-<h3>V. Backups:</h3>
+<h3>V. Backups & Restore:</h3>
 
 The shell scripts used for backups, restore and build are stored in ./backups/. If you modify them be sure to re-build the service.
+
+<b>V.a) Backups</b>
 
 The backups themself are bind through the service into a persistent data directory located in ./backups/backups/ in the host. Making them available through the host, but also to the web service for the download of the backups through the user interface.
 
@@ -156,6 +158,8 @@ Backups are first gunzipped and then encrypted using openssl and the mysql root 
 <br/>The frequency and the number of backups are defined by the two environment variables: CRON_TIME and MAX_BACKUPS.
 
 2 types of backups are made, both containing all databases. One beginning by the date/time (YYYYMMDDHHMM), the one being kept in limited number, and one simply called "backup.gz.enc", being the one downloaded through the user interface.
+
+<b>V.b) Restore</b>
 
 The restore script can be used through the host as follow:
 ```
