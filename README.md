@@ -5,6 +5,28 @@ Docker compose for EasyNut
 
 Required: docker, docker-compose (v3), git
 
+<b>Preparation of the host</b>
+<br/><i>Debian - Tested with fresh ubuntu 16.04 server</i>
+```
+sudo apt-get update && sudo apt-get upgrade
+# Git
+sudo apt-get install git
+# Docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+apt-cache policy docker-ce
+sudo apt-get install -y docker-ce
+# Remove sudo from docker
+sudo usermod -aG docker ${USER}
+su - ${USER}
+# Docker compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+<b>Preparation of the EasyNut docker compose</b>
+
 First clone this repository and move into it:
 ```
 git clone https://github.com/MSF-OCB/easynut-docker.git
@@ -22,6 +44,8 @@ Build the Docker files
 docker-compose build
 ```
 
+<b>Starting the docker compose</b>
+
 Launch docker compose in background
 ```
 docker-compose up -d
@@ -34,6 +58,11 @@ Easynut should be available at:
 <li>PHPMyAdmin at http://{IP/domain/localhost:8080}</li>
 </ul>
 If first time or data volume deleted, EasyNut is created with a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed on prod. env.</b>). See "Databases" below for custom MySQL import.
+
+<b>Optional: Systemd service</b>
+
+Systemd service for launching docker-compose on startup of the host.
+
 
 <h3>Structure:</h3>
 
