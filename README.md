@@ -57,8 +57,7 @@ Easynut should be available at:
 </ul>
 If first time or data volume deleted, EasyNut is created with a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed on prod. env.</b>). See "Databases" below for custom MySQL import.
 
-
-<b>Optional: Systemd service</b>
+<br/><b>Optional: Systemd service</b>
 
 Systemd service for automatically launching docker-compose on startup of the host.
 <br/> First create the service
