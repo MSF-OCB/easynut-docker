@@ -27,18 +27,24 @@ Launch docker compose in background
 docker-compose up -d
 ```
 
-Easynut should be available at http://{IP/domain/localhost}/nut, port 80, and the admin interface at http://{IP/domain/localhost}/admin.
-<br/> If first time or data volume deleted, EasyNut is created with a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed on prod. env.</b>). See "Databases" below for custom MySQL import.
+Easynut should be available at: 
+<ul>
+<li>Main EasyNut system at http://{IP/domain/localhost}/nut</li>
+<li>Django admin interface at http://{IP/domain/localhost}/admin</li>
+<li>PHPMyAdmin at http://{IP/domain/localhost:8080}</li>
+</ul>
+If first time or data volume deleted, EasyNut is created with a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed on prod. env.</b>). See "Databases" below for custom MySQL import.
 
 <b>Structure:</b>
 
-This project is composed of five services:
+This project is composed of six services:
 <ul>
 <li>web: Django front that contains the application code</li>
-<li>nginx: Nginx reverse proxy that will handle the static assets and forward the dynamic ones to the Django WSGI process.</li>
-<li>mysql: MySQL database</li>
-<li>redis: Redis database</li>
+<li><a href="https://hub.docker.com/r/tutum/nginx/">nginx</a>: Nginx reverse proxy that will handle the static assets and forward the dynamic ones to the Django WSGI process.</li>
+<li><a href="https://hub.docker.com/r/_/mysql/">mysql</a>: MySQL database</li>
+<li><a href="https://hub.docker.com/_/redis/">redis</a>: Redis database</li>
 <li>backups: Restore from encrypted backups and cron encrypt backups</li>
+<li><a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin/">phpmyadmin</a>: PHPMyAdmin service</li>
 </ul>
 
 Environment files:
