@@ -42,7 +42,7 @@ This project is composed of five services:
 </ul>
 
 Environment files:
-<i>In the environment file, if using "=", the values should not be surrounded by quotes</i>
+<br/><i>(In the environment file, if using "=", the values should not be surrounded by quotes)</i>
 <ul>
 <li>MYSQL_DATABASE: Django databse. Keep at 'easynut' or change compose and dockerfiles</li>
 <li>DATA_DB_NAME: Easynut database. Keep at 'easynutdata' or change compose and dockerfiles</li>
