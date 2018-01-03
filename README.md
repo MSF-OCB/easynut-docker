@@ -3,12 +3,12 @@ Docker compose for EasyNut
 
 <h3>In this README:</h3>
 <ul>
-<li>I. Installation steps</li>
-<li>II. Structure</li>
-<li>III. Environment files</li>
-<li>IV. Databases</li>
-<li>V. Backups & Restore</li>
-<li>VI. Known issues</li>
+<li><a href="#i-installation-steps">I. Installation steps</a></li>
+<li><a href="">II. Structure</a></li>
+<li><a href="">III. Environment files</a></li>
+<li><a href="">IV. Databases</a></li>
+<li><a href="">V. Backups & Restore</a></li>
+<li><a href="">VI. Known issues</a></li>
 </ul>
 
 <h3>I. Installation steps:</h3>
