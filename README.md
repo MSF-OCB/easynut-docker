@@ -165,7 +165,7 @@ The restore script can be used through the host as follow:
 ```
 docker container exec easynut_backups /restore.sh /backup/backup.gz.enc 
 ```
-And replace "backup.gz/enc" by the gunzipped and encrypted (<b>same enc. pass</b>) with the file that you want. 
+And replace "backup.gz.enc" by the gunzipped and encrypted (<b>same enc. pass</b>) with the file that you want. 
 <br/><i>(Note: in the container the folder '/backup' refers in the host to the folder "./backups/backups". You can therefore use the CRON backups already there or copy one from the host)</i>
 
 <h3>VI. Known issues:</h3>
