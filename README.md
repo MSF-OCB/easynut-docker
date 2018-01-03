@@ -3,10 +3,8 @@ Docker compose for EasyNut
 
 <h3>Installation steps:</h3>
 
-Required: docker, docker-compose (v3), git
-
 <b>Preparation of the host</b>
-<br/><i>Debian - Tested with fresh ubuntu 16.04 server</i>
+<br/><i>Debian - Tested with fresh ubuntu 16.04 server - Installation of required dependencies: git, docker, docker-compose (v3)</i>
 ```
 sudo apt-get update && sudo apt-get upgrade
 # Git
@@ -61,8 +59,39 @@ If first time or data volume deleted, EasyNut is created with a dummy database c
 
 <b>Optional: Systemd service</b>
 
-Systemd service for launching docker-compose on startup of the host.
+Systemd service for automatically launching docker-compose on startup of the host.
+<br/> First create the service
+```
+sudo vi /etc/systemd/system/easynut.service
+```
+Enter the following lines and change the path to the appropriate ones (mostly the "USER" value):
+```
+[Unit]
+Description=EasyNut containers
+Requires=docker.service
+After=docker.service
 
+[Service]
+Restart=on-failure
+ExecStart=/usr/local/bin/docker-compose -f /home/USER/easynut-docker/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f /home/USER/easynut-docker/docker-compose.yml stop
+
+[Install]
+WantedBy=default.target
+```
+Then:
+```
+sudo systemctl daemon-reload
+sudo systemctl start easynut.service 
+```
+Check that the service is well working with:
+```
+sudo systemctl status easynut.service
+```
+If yes, enable the service:
+```
+sudo systemctl enable easynut.service
+```
 
 <h3>Structure:</h3>
 
