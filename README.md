@@ -1,7 +1,7 @@
 # easynut-docker
 Docker compose for EasyNut
 
-<b>Installation steps:</b>
+<h3>Installation steps:</h3>
 
 Required: docker, docker-compose (v3), git
 
@@ -35,7 +35,7 @@ Easynut should be available at:
 </ul>
 If first time or data volume deleted, EasyNut is created with a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed on prod. env.</b>). See "Databases" below for custom MySQL import.
 
-<b>Structure:</b>
+<h3>Structure:</h3>
 
 This project is composed of six services:
 <ul>
@@ -47,8 +47,8 @@ This project is composed of six services:
 <li><a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin/">phpmyadmin</a>: PHPMyAdmin service</li>
 </ul>
 
-Environment files:
-<br/><i>(In the environment file, if using "=", the values should not be surrounded by quotes)</i>
+<h3>Environment files:</h3>
+<i>(In the environment file, if using "=", the values should not be surrounded by quotes)</i>
 <ul>
 <li>MYSQL_DATABASE: Django databse. Keep at 'easynut' or change compose and dockerfiles</li>
 <li>DATA_DB_NAME: Easynut database. Keep at 'easynutdata' or change compose and dockerfiles</li>
@@ -64,7 +64,7 @@ Environment files:
 <li>MAX_BACKUPS: Number of backup to keep. The old ones are automatically deleted</li>
 </ul>
 
-<b>Databases:</b>
+<h3>Databases:</h3>
 
 When created for the first time, the MySQL container will execute all the scripts located in 
 <br/>./mysql/docker-entrypoint-initdb.d/ (host)
@@ -76,7 +76,8 @@ If you wish to create easynut with an existing database, delete the file ./mysql
 <li>Note 1: Keep in mind that files are executed by alphabetical order. The file "2_easynut_web.sh" should always be executed at last as it deals with the mysql user permissions.</li>
 <li>Note 2: The MySQL data are also persitant through a shared volume "easynutdocker_mysql_data". If you want to rebuild the mysql container with new data, think to delete the volume before hand.</li>
 </ul>
-<b>Backups:</b>
+
+<h3>Backups:</h3>
 
 The shell scripts used for backups, restore and build are stored in ./backups/. If you modify them be sure to re-build the service.
 
@@ -94,7 +95,7 @@ docker container exec easynut_backups /restore.sh /backup/backup.gz.enc
 And replace "backup.gz/enc" but the gunzipped and encrypted (<b>same enc. pass</b>) with the file that you want. 
 <br/><i>(Note: in the container the folder '/backup' refers in the host to the folder "./backups/backups". You can therefore use the CRON backups already there or copy one from the host)</i>
 
-<b>Known caveats:</b>
+<h3>Known caveats:</h3>
 <ul>
 <li>Easynut github branch: The "new_layout" branch currently used is not adequate for this compose setup.The files "settings.py" and "requirements.txt" are duplicated (the ones in these repository being used here) as the static files are not needed. -> Needs for merging and better git structure</li>
 <li>Security: This compose is not made for easy developpement environment and proper considerations should be made if use in prod.</li>
