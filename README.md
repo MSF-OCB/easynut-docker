@@ -42,7 +42,7 @@ This project is composed of five services:
 </ul>
 
 Environment files:
-<i>In the environment file, if using "=", the values should not be surrounded by quotes</i>
+<br/><i>(In the environment file, if using "=", the values should not be surrounded by quotes)</i>
 <ul>
 <li>MYSQL_DATABASE: Django databse. Keep at 'easynut' or change compose and dockerfiles</li>
 <li>DATA_DB_NAME: Easynut database. Keep at 'easynutdata' or change compose and dockerfiles</li>
@@ -54,7 +54,7 @@ Environment files:
 <li>DEBUG: True or False for django debug</li>
 <li>SECRET_KEY: Django secret key</li>
 <li>ALLOWED_HOSTS: Set to '*' in dev environment</li>
-<li>CRON_TIME: CRON for automated enccrypted backups. For example '0 * * * *' for a hourly backup</li>
+<li>CRON_TIME: CRON timing for automated enccrypted backups. For example '0 * * * *' for a hourly backup <i>(see <a href="https://en.wikipedia.org/wiki/Cron#CRON_expression">CRON expression</a>)</i></li>
 <li>MAX_BACKUPS: Number of backup to keep. The old ones are automatically deleted</li>
 </ul>
 
@@ -63,13 +63,13 @@ Environment files:
 When created for the first time, the MySQL container will execute all the scripts located in 
 <br/>./mysql/docker-entrypoint-initdb.d/ (host)
 <br/>/docker-entrypoint-initdb.d/ (container)
-<br/><i>(More on info <a href="https://hub.docker.com/_/mysql/">MySQL Docker</a>)</i>
 
 If you wish to create easynut with an existing database, delete the file ./mysql/docker-entrypoint-initdb.d/1_restore.sql (host) and copy the file of your choice in the folder. 
-
-Note 1: Keep in mind that files are executed by alphabetical order. The file "2_easynut_web.sh" should always be executed at last as it deals with the mysql user permissions.
-<br/>Note 2: The MySQL data are also persitant through a shared volume "easynutdocker_mysql_data". If you want to rebuild the mysql container with new data, think to delete the volume before hand.
-
+<br/><i>(see <a href="https://hub.docker.com/_/mysql/">MySQL Docker</a>)</i>
+<ul>
+<li>Note 1: Keep in mind that files are executed by alphabetical order. The file "2_easynut_web.sh" should always be executed at last as it deals with the mysql user permissions.</li>
+<li>Note 2: The MySQL data are also persitant through a shared volume "easynutdocker_mysql_data". If you want to rebuild the mysql container with new data, think to delete the volume before hand.</li>
+</ul>
 <b>Backups:</b>
 
 The shell scripts used for backups, restore and build are stored in ./backups/. If you modify them be sure to re-build the service.
