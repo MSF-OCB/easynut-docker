@@ -152,7 +152,7 @@ The shell scripts used for backups, restore and build are stored in ./backups/. 
 
 <b>V.a) Backups</b>
 
-The backups themself are bind through the service into a persistent data directory located in ./backups/backups/ in the host, and /backup in the container. They are therefore available through the host, but also to the web service for the download of the backups via the user interface.
+The backups themself are bind through the service into a persistent data directory located in ./backups/backups/ in the host, and /backup in the container. They are therefore available through the host, but also to the web service at /opt/shared for the download of the backups via the user interface.
 
 Backups are first gunzipped and then encrypted using openssl and the mysql root password. 
 <br/>The frequency and the number of backups are defined by the two environment variables: CRON_TIME and MAX_BACKUPS.
