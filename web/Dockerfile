@@ -13,8 +13,7 @@ WORKDIR /data/web
 # Django easynut requirements
 # Remove uncessary libraries
 COPY settings /data/web/
-RUN pip install --no-cache-dir -r requirements.txt \
-  && apk del -r mysql py-pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Last easynut code
 # Correct paths to settings.py (temporary) and requirements.txt
