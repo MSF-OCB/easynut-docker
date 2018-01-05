@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.7
 
 ARG DATA_DB_NAME
 ARG CRON_TIME

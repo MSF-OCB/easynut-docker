@@ -25,37 +25,57 @@ services:
       - django_static:/data/web/easynut/static
       - ./backups/backups:/opt/shared
     container_name: easynut_django
+    networks:
+      nginx-net:
+        ipv4_address: 172.20.0.2
+      mysql-net:
+        ipv4_address: 172.21.0.2
+      redis-net:
+        ipv4_address: 172.22.0.2
     working_dir: /data/web/easynut
     command: [sh, -c, "/usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
   nginx:
     restart: always
-    build: ./nginx/
+    image: nginx:1.13-alpine
+    build:
+      context: ./nginx/
     ports:
       - "80:80"
     depends_on:
       - web
     container_name: easynut_nginx
     volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
       - django_static:/data/web/easynut/static
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      nginx-net:
+        ipv4_address: 172.20.0.3
   mysql:
     restart: always
-    image: mysql:latest
+    image: mysql:5.7
     volumes:
       - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql
     env_file: .env
     expose:
       - "3306"
+    networks:
+      mysql-net:
+        ipv4_address: 172.21.0.4
     container_name: easynut_mysql
   redis:
     restart: always
-    image: redis:latest
+    image: redis:4.0.6-alpine
     expose:
       - "6379"
     container_name: easynut_redis
+    networks:
+      redis-net:
+        ipv4_address: 172.22.0.5
   backups:
     restart: always
-    image: alpine
+    image: alpine:3.7
     build:
       context: ./backups/
       args:
@@ -64,20 +84,60 @@ services:
     env_file: .env
     depends_on:
       - mysql 
+      - web
     volumes:
       - ./backups/backups:/backup
     container_name: easynut_backups
+    networks:
+      mysql-net:
+        ipv4_address: 172.21.0.6
+      backups-net:
+        ipv4_address: 172.23.0.6
   phpmyadmin:
     restart: always
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:4.7
     container_name: easynut_phpmyadmin
-    ports:
-      - "8080:80"
+    #ports:
+    #  - "8080:80"
+    #expose:
+    #  - "80"
     depends_on:
       - mysql
     env_file: .env
     environment:
       - PMA_HOST=easynut_mysql
+    networks:
+      mysql-net:
+        ipv4_address: 172.21.0.7
+      nginx-net:
+        ipv4_address: 172.20.0.7
+
 volumes:
   django_static:
   mysql_data:
+
+networks:
+  nginx-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config: 
+        - subnet: 172.20.0.0/16
+  mysql-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.21.0.0/16
+  redis-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.0.0/16
+  backups-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.23.0.0/16

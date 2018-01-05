@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.7
 
 # Initialize environment variables for django CLI
 ARG SECRET_KEY
