@@ -81,24 +81,6 @@ services:
         ipv4_address: 172.21.0.6
       backups-net:
         ipv4_address: 172.23.0.6
-  phpmyadmin:
-    restart: always
-    image: phpmyadmin/phpmyadmin:4.7
-    container_name: easynut_phpmyadmin
-    #ports:
-    #  - "8080:80"
-    #expose:
-    #  - "80"
-    depends_on:
-      - mysql
-    env_file: .env
-    environment:
-      - PMA_HOST=easynut_mysql
-    networks:
-      mysql-net:
-        ipv4_address: 172.21.0.7
-      nginx-net:
-        ipv4_address: 172.20.0.7
 
 volumes:
   django_static:
