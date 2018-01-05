@@ -2,35 +2,33 @@ FROM alpine:3.7
 MAINTAINER Edouard Lavaud
 
 # Dependencies
-RUN apk add --no-cache python python-dev py-pip mysql-client mysql-dev build-base gettext git vim libxslt-dev jpeg-dev \
+RUN rm -rf /var/cache/apk/* \
+  && rm -rf /tmp/* \
+  && apk update \
+  && apk --no-cache add python python-dev py-pip mysql-client mysql-dev build-base gettext git vim libxslt-dev jpeg-dev \
   && mkdir -p /data/web
 
-# Pull the last base from github and replace requirements and settings.py 
-# This has to be changed after with a better git repo
-# Change requirements.txt and install it
 WORKDIR /data/web
+
+# Django easynut requirements
+# Remove uncessary libraries
+COPY settings /data/web/
+RUN pip install --no-cache-dir -r requirements.txt \
+  && apk del -r mysql py-pip
+
+# Last easynut code
+# Correct paths to settings.py (temporary) and requirements.txt
+# Remove static CSS file (bug: not replaced by collectstatic so delete it before)
 RUN git clone -b new_layout https://github.com/MSF-OCB/easynut \
   && rm /data/web/easynut/requirements.txt \
-  && rm /data/web/easynut/django_easynut/settings.py
-
-COPY requirements.txt /data/web/easynut
-COPY settings.py /data/web/easynut/django_easynut/settings.py
-
-RUN pip install -r easynut/requirements.txt \
-  && apk del -r mysql \
+  && rm /data/web/easynut/django_easynut/settings.py \
+  && mv requirements.txt easynut/requirements.txt \
+  && mv settings.py easynut/django_easynut/settings.tmp.py \
+  && mv settings.build.py easynut/django_easynut/settings.py \ 
   && rm /data/web/easynut/static/emr/style.css
-
+ 
+# Collect static django files and replace right settings.py file
 WORKDIR /data/web/easynut
-
-# Initialize environment variables for django CLI
-ARG SECRET_KEY
-ARG DEBUG
-ARG ALLOWED_HOSTS
-ARG MYSQL_DATABASE
-ARG MYSQL_USER
-ARG MYSQL_PASSWORD
-ARG DB_SERVICE
-ARG DB_PORT
-ARG DATA_DB_NAME
-
-RUN python /data/web/easynut/manage.py collectstatic --no-input
+RUN python /data/web/easynut/manage.py collectstatic --no-input \
+  && rm django_easynut/settings.py \
+  && mv django_easynut/settings.tmp.py django_easynut/settings.py
