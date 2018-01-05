@@ -2,3 +2,5 @@
 *.gz.enc
 logs/*
 docker-compose.yml
+source/*
+*.swp
