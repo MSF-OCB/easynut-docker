@@ -86,7 +86,7 @@ services:
         ipv4_address: 172.21.0.5
     restart: always
   backups:
-    image: alpine:3.7
+    image: elavaud/backups:1
     container_name: easynut_backups
     env_file: .env
     depends_on:
@@ -99,12 +99,8 @@ services:
     networks:
       back-end:
         ipv4_address: 172.21.0.6
+    command: [sh, -c, "/run.sh"]
     restart: always
-    build:
-      context: ./backups/
-      args:
-        DATA_DB_NAME: ${DATA_DB_NAME}
-        CRON_TIME: ${CRON_TIME}
 
 volumes:
   django_static:
