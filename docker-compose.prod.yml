@@ -13,8 +13,6 @@ services:
       - type: volume
         source: django_static
         target: /data/web/easynut/static
-        volume:
-          nocopy: true
       - type: bind
         source: ./backups/backups
         target: /opt/shared
