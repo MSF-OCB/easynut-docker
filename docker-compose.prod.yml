@@ -1,18 +1,24 @@
-version: "3"
+version: "3.3"
 services:
   web:
-    restart: always
     image: elavaud/easynut:1
+    container_name: easynut_django
+    env_file: .env
     expose:
       - "8000"
     depends_on:
       - mysql
       - redis
-    env_file: .env
     volumes:
-      - django_static:/data/web/easynut/static
-      - ./backups/backups:/opt/shared
-    container_name: easynut_django
+      - type: volume
+        source: django_static
+        target: /data/web/easynut/static
+        volume:
+          nocopy: true
+      - type: bind
+        source: ./backups/backups
+        target: /opt/shared
+        readonly: true
     networks:
       front-end:
         ipv4_address: 172.20.0.2
@@ -20,63 +26,79 @@ services:
         ipv4_address: 172.21.0.2
     working_dir: /data/web/easynut
     command: [sh, -c, "/usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
-  nginx:
     restart: always
+  nginx:
     image: nginx:1.13-alpine
-    build:
-      context: ./nginx/
+    container_name: easynut_nginx
     ports:
       - "80:80"
     depends_on:
       - web
-    container_name: easynut_nginx
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - django_static:/data/web/easynut/static
-      - ./logs/nginx:/var/log/nginx
+      - type: volume
+        source: django_static
+        target: /data/web/easynut/static
+        read_only: true
+      - type: bind
+        source: /var/run/docker.sock
+        target: /tmp/docker.sock
+        readonly: true
+      - type: bind
+        source: ./logs/nginx
+        target: /var/log/nginx
     networks:
       front-end:
         ipv4_address: 172.20.0.3
-  mysql:
     restart: always
+    build:
+      context: ./nginx/
+  mysql:
     image: mysql:5.7
-    volumes:
-      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - mysql_data:/var/lib/mysql
+    container_name: easynut_mysql
     env_file: .env
     expose:
       - "3306"
+    volumes:
+      - type: bind
+        source: ./mysql/docker-entrypoint-initdb.d
+        target: /docker-entrypoint-initdb.d
+        readonly: true
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
     networks:
       back-end:
         ipv4_address: 172.21.0.4
-    container_name: easynut_mysql
-  redis:
     restart: always
+  redis:
     image: redis:4.0.6-alpine
+    container_name: easynut_redis
     expose:
       - "6379"
-    container_name: easynut_redis
     networks:
       back-end:
         ipv4_address: 172.21.0.5
-  backups:
     restart: always
+  backups:
     image: alpine:3.7
-    build:
-      context: ./backups/
-      args:
-        DATA_DB_NAME: ${DATA_DB_NAME}
-        CRON_TIME: ${CRON_TIME}
+    container_name: easynut_backups
     env_file: .env
     depends_on:
       - mysql 
       - web
     volumes:
-      - ./backups/backups:/backup
-    container_name: easynut_backups
+      - type: bind
+        source: ./backups/backups
+        target: /backup
     networks:
       back-end:
         ipv4_address: 172.21.0.6
+    restart: always
+    build:
+      context: ./backups/
+      args:
+        DATA_DB_NAME: ${DATA_DB_NAME}
+        CRON_TIME: ${CRON_TIME}
 
 volumes:
   django_static:
