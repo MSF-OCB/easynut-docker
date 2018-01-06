@@ -14,12 +14,10 @@ services:
       - ./backups/backups:/opt/shared
     container_name: easynut_django
     networks:
-      nginx-net:
+      front-end:
         ipv4_address: 172.20.0.2
-      mysql-net:
+      back-end:
         ipv4_address: 172.21.0.2
-      redis-net:
-        ipv4_address: 172.22.0.2
     working_dir: /data/web/easynut
     command: [sh, -c, "/usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
   nginx:
@@ -37,7 +35,7 @@ services:
       - django_static:/data/web/easynut/static
       - ./logs/nginx:/var/log/nginx
     networks:
-      nginx-net:
+      front-end:
         ipv4_address: 172.20.0.3
   mysql:
     restart: always
@@ -49,7 +47,7 @@ services:
     expose:
       - "3306"
     networks:
-      mysql-net:
+      back-end:
         ipv4_address: 172.21.0.4
     container_name: easynut_mysql
   redis:
@@ -59,8 +57,8 @@ services:
       - "6379"
     container_name: easynut_redis
     networks:
-      redis-net:
-        ipv4_address: 172.22.0.5
+      back-end:
+        ipv4_address: 172.21.0.5
   backups:
     restart: always
     image: alpine:3.7
@@ -77,37 +75,23 @@ services:
       - ./backups/backups:/backup
     container_name: easynut_backups
     networks:
-      mysql-net:
+      back-end:
         ipv4_address: 172.21.0.6
-      backups-net:
-        ipv4_address: 172.23.0.6
 
 volumes:
   django_static:
   mysql_data:
 
 networks:
-  nginx-net:
+  front-end:
     driver: bridge
     ipam:
       driver: default
       config: 
         - subnet: 172.20.0.0/16
-  mysql-net:
+  back-end:
     driver: bridge
     ipam:
       driver: default
       config:
         - subnet: 172.21.0.0/16
-  redis-net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.22.0.0/16
-  backups-net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.23.0.0/16
