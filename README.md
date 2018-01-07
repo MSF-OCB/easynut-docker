@@ -1,6 +1,8 @@
 # easynut-docker
 Docker compose for EasyNut
 
+Includes a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed</b>). See "Databases" below for custom MySQL import.
+
 <h3>In this README:</h3>
 <ul>
 <li><a href="#i-installation-steps">I. Installation steps</a></li>
@@ -14,7 +16,7 @@ Docker compose for EasyNut
 <h3>I. Installation steps:</h3>
 
 <b>I.a) Preparation of the host</b>
-<br/><i>Debian - Tested with fresh ubuntu 16.04 server - Installation of required dependencies: git, docker, docker-compose (v3)</i>
+<br/><i>Installation of: git, docker, docker-compose (v3)<br/>Debian - Tested on ubuntu systems with overlay2 file system</i>
 ```
 sudo apt-get update && sudo apt-get upgrade
 # Git
@@ -46,15 +48,26 @@ Create your environment variables (Refer to the variables section below)
 cp .env.template .env
 vim .env
 ```
-
-Build the Docker files
+Choose the type of install: prod-oriented or dev by copying the right compose file
+```
+# if production-oriented:
+cp docker-compose.prod.yml docker-compose.yml
+# if development environment (not fully tested yet)
+cp docker-compose.dev.yml docker-compose.yml
+```
+If you chose the dev environment, you need to build some Dockerfiles
 ```
 docker-compose build
 ```
+If you chose the prod-oriented, you will use redis which needs few <a href="https://www.techandme.se/performance-tips-for-redis-cache-server/">adjustments</a> on the host. Launch the following scripts with sudo privileges:
+```
+sudo redis/preparehost.sh
+```
 
-<b>I.c) Starting the docker compose</b>
 
-Launch docker compose in background
+<b>I.c) Using compose </b>
+
+Launch docker compose (the first time, it will need to download all images so it can take a while)
 ```
 docker-compose up -d
 ```
@@ -65,7 +78,11 @@ Easynut should be available at:
 <li>Django admin interface at http://{IP/domain/localhost}/admin</li>
 <li>PHPMyAdmin at http://{IP/domain/localhost:8080}</li>
 </ul>
-If first time or data volume deleted, EasyNut is created with a dummy database comprising a demo version of EasyNut in a nutrition center (forms configured but no patients), and a single user admin (pwd:adminadmin, <b>to be changed on prod. env.</b>). See "Databases" below for custom MySQL import.
+
+Stop compose with:
+```
+docker-compose down
+```
 
 <br/><b>I.d) Optional: Systemd service</b>
 
@@ -108,12 +125,19 @@ sudo systemctl enable easynut.service
 <h3>II. Structure:</h3>
 
 This project is composed of six services:
+<br/>Common to prod and dev:
 <ul>
 <li>web: Django front that contains the application code</li>
-<li><a href="https://hub.docker.com/r/tutum/nginx/">nginx</a>: Nginx reverse proxy that will handle the static assets and forward the dynamic ones to the Django WSGI process.</li>
 <li><a href="https://hub.docker.com/r/_/mysql/">mysql</a>: MySQL database</li>
-<li><a href="https://hub.docker.com/_/redis/">redis</a>: Redis database</li>
 <li>backups: Restore from encrypted backups and cron encrypt backups</li>
+</ul>
+Prod:
+<ul>
+<li><a href="https://hub.docker.com/r/tutum/nginx/">nginx</a>: Nginx reverse proxy that will handle the static assets and forward the dynamic ones to the Django WSGI process.</li>
+<li><a href="https://hub.docker.com/_/redis/">redis</a>: Redis database</li>
+</ul>
+Dev:
+<ul>
 <li><a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin/">phpmyadmin</a>: PHPMyAdmin service</li>
 </ul>
 
