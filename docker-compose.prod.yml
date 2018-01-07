@@ -42,7 +42,7 @@ services:
         target: /tmp/docker.sock
         read_only: true
       - type: bind
-        source: ./logs/nginx
+        source: ./nginx/logs
         target: /var/log/nginx
       - type: bind
         source: ./nginx/default.conf

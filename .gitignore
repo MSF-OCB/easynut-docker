@@ -1,6 +1,7 @@
 .env
 *.gz.enc
-!logs/nginx/.keep
+nginx/logs/*
+!nginx/logs/.keep
 docker-compose.yml
 source/*
 *.swp
