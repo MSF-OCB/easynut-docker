@@ -7,7 +7,7 @@ Includes a dummy database comprising a demo version of EasyNut in a nutrition ce
 <ul>
 <li><a href="#i-installation-steps">I. Installation steps</a></li>
 <li><a href="#ii-structure">II. Structure</a></li>
-<li><a href="#iii-environment-files">III. Environment files</a></li>
+<li><a href="#iii-environment-variables">III. Environment variables</a></li>
 <li><a href="#iv-databases">IV. Databases</a></li>
 <li><a href="#v-backups--restore">V. Backups & Restore</a></li>
 <li><a href="#vi-known-issues">VI. Known issues</a></li>
@@ -43,7 +43,7 @@ git clone https://github.com/MSF-OCB/easynut-docker.git
 cd easynut-docker
 ```
 
-Create your environment variables (Refer to the variables section below)
+Create your environment variables (In doubt, refer to the variables section below)
 ```
 cp .env.template .env
 vim .env
@@ -141,7 +141,7 @@ Dev:
 <li><a href="https://hub.docker.com/r/phpmyadmin/phpmyadmin/">phpmyadmin</a>: PHPMyAdmin service</li>
 </ul>
 
-<h3>III. Environment files:</h3>
+<h3>III. Environment variables:</h3>
 
 <ul>
 <li>MYSQL_DATABASE: Django database. Keep at 'easynut' or change sql files</li>
