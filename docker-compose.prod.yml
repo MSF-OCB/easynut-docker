@@ -17,13 +17,17 @@ services:
         source: ./backups/backups
         target: /opt/shared
         read_only: true
+      - type: bind
+        source: ./wait-for
+        target: /wait-for
+        read_only: true
     networks:
       front-end:
         ipv4_address: 172.20.0.2
       back-end:
         ipv4_address: 172.21.0.2
     working_dir: /data/web/easynut
-    command: [sh, -c, "/usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
+    command: [sh, -c, "/wait-for -t 30 mysql:3306 && /wait-for -t 30 redis:6379 -- /usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
     restart: always
   nginx:
     image: nginx:1.13-alpine
@@ -52,9 +56,14 @@ services:
         source: ./nginx/easynut_django.local 
         target: /etc/nginx/easynut_django.local
         read_only: true
+      - type: bind
+        source: ./wait-for
+        target: /wait-for
+        read_only: true
     networks:
       front-end:
         ipv4_address: 172.20.0.3
+    command: [sh, -c, "/wait-for -t 90 web:8000 -- nginx -g 'daemon off;'"]
     restart: always
   mysql:
     image: mysql:5.7
@@ -96,10 +105,14 @@ services:
       - type: bind
         source: ./backups/backups
         target: /backup
+      - type: bind
+        source: ./wait-for
+        target: /wait-for
+        read_only: true
     networks:
       back-end:
         ipv4_address: 172.21.0.6
-    command: [sh, -c, "/run.sh"]
+    command: [sh, -c, "/wait-for -t 30 mysql:3306 && /wait-for -t 60 web:8000 -- /run.sh"]
     restart: always
 
 volumes:

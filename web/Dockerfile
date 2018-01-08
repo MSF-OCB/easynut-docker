@@ -13,7 +13,7 @@ WORKDIR /data/web
 # Django easynut requirements
 COPY settings /data/web/
 RUN apk --no-cache add python-dev mysql-client mysql-dev \
-  && pip install --no-cache-dir -r requirements.txt \
+  && pip install --no-cache-dir -r requirements.txt 
   && apk del -r python-dev mysql
 
 # Last easynut code
