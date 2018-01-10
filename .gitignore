@@ -5,3 +5,10 @@ nginx/logs/*
 docker-compose.yml
 source/*
 *.swp
+web/easynut/emr/*
+!web/easynut/emr/.keep
+web/easynut/static/*
+!web/easynut/static/.keep
+web/easynut/export/*
+!web/easynut/export/.keep
+*.pyc

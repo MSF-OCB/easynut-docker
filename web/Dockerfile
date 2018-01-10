@@ -10,22 +10,16 @@ RUN rm -rf /var/cache/apk/* \
   && apk --no-cache add mariadb-dev gcc libxslt-dev jpeg-dev musl-dev \
   && mkdir -p /data/web
 
-WORKDIR /data/web
+COPY easynut /data/web/easynut
 
-# Django easynut requirements
-COPY settings /data/web/
+WORKDIR /data/web/easynut
+
 RUN pip install --no-cache-dir -r requirements.txt 
 
 # Last easynut code
 # Correct paths to settings.py (temporary) and requirements.txt
 # Remove static CSS file (bug: not replaced by collectstatic so delete it before)
 RUN apk --no-cache add git \
-  && git clone -b new_layout https://github.com/MSF-OCB/easynut \
-  && apk del -r git \
-  && rm /data/web/easynut/requirements.txt \
-  && rm /data/web/easynut/django_easynut/settings.py \
-  && mv requirements.txt easynut/requirements.txt \
-  && mv settings.py easynut/django_easynut/settings.py \
-  && rm /data/web/easynut/static/emr/style.css
- 
-WORKDIR /data/web/easynut
+  && git clone https://github.com/MSF-OCB/easynut \
+  && mv easynut emr \
+  && apk del -r git
