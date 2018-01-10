@@ -13,12 +13,11 @@ services:
     env_file: .env
     volumes:
       - ./backups/backups:/opt/shared
-      - ./source:/data/web/easynut:rw
+#      - ./source:/data/web/easynut:rw
     container_name: easynut_django
     networks:
-      mysql-net:
+      back-end:
         ipv4_address: 172.21.0.2
-    working_dir: /data/web/easynut
     command: [sh, -c, "python manage.py runserver 0.0.0.0:8000"]
   mysql:
     restart: always
@@ -30,29 +29,25 @@ services:
     expose:
       - "3306"
     networks:
-      mysql-net:
+      back-end:
         ipv4_address: 172.21.0.4
     container_name: easynut_mysql
   backups:
-    restart: always
-    image: alpine:3.7
-    build:
-      context: ./backups/
-      args:
-        DATA_DB_NAME: ${DATA_DB_NAME}
-        CRON_TIME: ${CRON_TIME}
+    image: elavaud/backups:1
+    container_name: easynut_backups
     env_file: .env
     depends_on:
-      - mysql 
+      - mysql
       - web
     volumes:
-      - ./backups/backups:/backup
-    container_name: easynut_backups
+      - type: bind
+        source: ./backups/backups
+        target: /backup
     networks:
-      mysql-net:
+      back-end:
         ipv4_address: 172.21.0.6
-      backups-net:
-        ipv4_address: 172.23.0.6
+    command: [sh, -c, "/run.sh"]
+    restart: always
   phpmyadmin:
     restart: always
     image: phpmyadmin/phpmyadmin:4.7
@@ -67,22 +62,16 @@ services:
     environment:
       - PMA_HOST=easynut_mysql
     networks:
-      mysql-net:
+      back-end:
         ipv4_address: 172.21.0.7
 
 volumes:
   mysql_data:
 
 networks:
-  mysql-net:
+  back-end:
     driver: bridge
     ipam:
       driver: default
       config:
         - subnet: 172.21.0.0/16
-  backups-net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.23.0.0/16
