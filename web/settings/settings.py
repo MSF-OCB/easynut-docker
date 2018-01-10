@@ -141,18 +141,18 @@ SESSION_COOKIE_AGE = 20 * 60
 SESSION_SAVE_EVERY_REQUEST = True
 
 
+if (os.environ['ENV_TYPE'] != 'dev'):
+	# https://www.capside.com/labs/deploying-full-django-stack-with-docker-compose/
+	CACHES = {
+	    "default": {
+		"BACKEND": "django_redis.cache.RedisCache",
+		"LOCATION": "redis://redis:6379/0",
+		"OPTIONS": {
+		    "CLIENT_CLASS": "django_redis.client.DefaultClient",
+		}
+	    }
+	}
 
-# https://www.capside.com/labs/deploying-full-django-stack-with-docker-compose/
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/0",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
-
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
+	SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+	SESSION_CACHE_ALIAS = "default"
 

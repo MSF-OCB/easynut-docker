@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   web:
-    image: elavaud/easynut:1
+    image: elavaud/easynut:1.1
     container_name: easynut_django
     env_file: .env
     expose:
@@ -26,8 +26,7 @@ services:
         ipv4_address: 172.20.0.2
       back-end:
         ipv4_address: 172.21.0.2
-    working_dir: /data/web/easynut
-    command: [sh, -c, "/wait-for -t 30 mysql:3306 && /wait-for -t 30 redis:6379 -- /usr/bin/gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
+    command: [sh, -c, "python manage.py collectstatic  --no-input && /wait-for -t 30 mysql:3306 && /wait-for -t 30 redis:6379 -- gunicorn django_easynut.wsgi:application -w 2 -b :8000"]
     restart: always
   nginx:
     image: nginx:1.13-alpine
