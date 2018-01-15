@@ -90,8 +90,6 @@ services:
     networks:
       back-end:
         ipv4_address: 172.21.0.5
-    sysctls:
-      - net.core.somaxconn=511
     restart: always
   backups:
     image: elavaud/backups:1
