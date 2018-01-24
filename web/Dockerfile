@@ -10,11 +10,11 @@ RUN rm -rf /var/cache/apk/* \
   && apk --no-cache add mariadb-dev gcc libxslt-dev jpeg-dev musl-dev \
   && mkdir -p /data/web
 
-COPY easynut /data/web/easynut
-
 WORKDIR /data/web/easynut
+COPY easynut/ ./
 
-RUN pip install --no-cache-dir -r requirements.txt 
+RUN pip install --no-cache-dir -r requirements_docker.txt \
+  && pip install --no-cache-dir -r requirements.txt
 
 # Last easynut code
 # Correct paths to settings.py (temporary) and requirements.txt
