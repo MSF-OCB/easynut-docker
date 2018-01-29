@@ -66,10 +66,18 @@ cp docker-compose.prod.yml docker-compose.yml
 cp docker-compose.dev.yml docker-compose.yml
 ```
 
+Download the latest version of the code.
+
+```
+[ -d web/easynut ] && rm -rf web/easynut
+git clone -b new_layout https://github.com/MSF-OCB/easynut.git web/easynut
+```
+
 If you chose the dev environment, you need to build some Dockerfiles
 
 ```
 docker-compose build
+docker push msfocb/easynut:1.2
 ```
 
 If you chose the prod-oriented, you will use redis which needs few [adjustments](https://www.techandme.se/performance-tips-for-redis-cache-server/) on the host. Launch the following scripts with sudo privileges:
