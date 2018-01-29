@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   web:
-    image: elavaud/easynut:1.2
+    image: msfocb/easynut:1.2
     container_name: easynut_django
     env_file: .env
     expose:
@@ -52,7 +52,7 @@ services:
         target: /etc/nginx/conf.d/default.conf
         read_only: true
       - type: bind
-        source: ./nginx/easynut_django.local 
+        source: ./nginx/easynut_django.local
         target: /etc/nginx/easynut_django.local
         read_only: true
       - type: bind
@@ -98,7 +98,7 @@ services:
     container_name: easynut_backups
     env_file: .env
     depends_on:
-      - mysql 
+      - mysql
       - web
     volumes:
       - type: bind
@@ -123,7 +123,7 @@ networks:
     driver: bridge
     ipam:
       driver: default
-      config: 
+      config:
         - subnet: 172.20.0.0/16
   back-end:
     driver: bridge
