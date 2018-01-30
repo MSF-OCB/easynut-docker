@@ -98,7 +98,9 @@ docker-compose up -d
 Apply DB migrations from the application
 
 ```
-docker cp web/easynut/sql/migrations/. easynut_mysql:/tmp/easynut-sql-migrations/
+docker cp easynut_django:/data/web/easynut/sql/migrations/. /tmp/easynut-sql-migrations/
+docker cp /tmp/easynut-sql-migrations/. easynut_mysql:/tmp/easynut-sql-migrations/
+rm -rf /tmp/easynut-sql-migrations/
 docker exec -it easynut_mysql /tmp/easynut-sql-migrations/migrate.sh
 ```
 
