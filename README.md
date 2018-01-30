@@ -95,6 +95,13 @@ Launch docker compose (the first time, it will need to download all images so it
 docker-compose up -d
 ```
 
+Apply DB migrations from the application
+
+```
+docker cp web/easynut/sql/migrations/. easynut_mysql:/tmp/easynut-sql-migrations/
+docker exec -it easynut_mysql /tmp/easynut-sql-migrations/migrate.sh
+```
+
 Easynut should be available at:
 
 - Main EasyNut system at http://{IP/domain/localhost}/nut
