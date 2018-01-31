@@ -104,6 +104,12 @@ rm -rf /tmp/easynut-sql-migrations/
 docker exec -it easynut_mysql /tmp/easynut-sql-migrations/migrate.sh
 ```
 
+Check applied DB migrations
+
+```
+docker exec -it easynut_mysql /tmp/easynut-sql-migrations/applied_migrations.sh
+```
+
 Easynut should be available at:
 
 - Main EasyNut system at http://{IP/domain/localhost}/nut
