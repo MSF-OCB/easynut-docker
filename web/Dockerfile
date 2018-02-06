@@ -19,7 +19,7 @@ RUN pip install --no-cache-dir -r requirements_docker.txt \
 # Last easynut code
 # Correct paths to settings.py (temporary) and requirements.txt
 # Remove static CSS file (bug: not replaced by collectstatic so delete it before)
-RUN apk --no-cache add git \
-  && git clone https://github.com/MSF-OCB/easynut \
-  && mv easynut emr \
-  && apk del -r git
+# RUN apk --no-cache add git \
+#   && git clone https://github.com/MSF-OCB/easynut \
+#   && mv easynut emr \
+#   && apk del -r git
