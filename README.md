@@ -95,6 +95,12 @@ Launch docker compose (the first time, it will need to download all images so it
 docker-compose up -d
 ```
 
+Apply Django migrations
+
+```
+docker exec -it easynut_django /data/web/easynut/manage.py migrate
+```
+
 Apply DB migrations from the application
 
 ```
