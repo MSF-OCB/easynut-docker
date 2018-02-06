@@ -77,7 +77,7 @@ If you chose the dev environment, you need to build some Dockerfiles
 
 ```
 docker-compose build
-docker push msfocb/easynut:1.2
+docker push msfocb/easynut:1.4
 ```
 
 If you chose the prod-oriented, you will use redis which needs few [adjustments](https://www.techandme.se/performance-tips-for-redis-cache-server/) on the host. Launch the following scripts with sudo privileges:

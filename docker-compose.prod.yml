@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   web:
-    image: msfocb/easynut:1.3
+    image: msfocb/easynut:1.4
     container_name: easynut_django
     env_file: .env
     expose:
