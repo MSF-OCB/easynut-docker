@@ -16,6 +16,8 @@ COPY easynut/ ./
 RUN pip install --no-cache-dir -r requirements_docker.txt \
   && pip install --no-cache-dir -r requirements.txt
 
+RUN echo "* * * * * python /data/web/easynut/manage.py process_tasks --duration 60" | crontab -
+
 # Last easynut code
 # Correct paths to settings.py (temporary) and requirements.txt
 # Remove static CSS file (bug: not replaced by collectstatic so delete it before)
