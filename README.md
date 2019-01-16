@@ -128,56 +128,6 @@ Stop compose with:
 docker-compose down
 ```
 
-
-### I.d) Optional: Systemd service
-
-Systemd service for automatically launching docker-compose on startup of the host.
-
-First create the service:
-
-```
-sudo vi /etc/systemd/system/easynut.service
-```
-
-Enter the following lines and change the path to the appropriate ones (mostly the "USER" value):
-
-```
-[Unit]
-Description=EasyNut containers
-Requires=docker.service
-After=docker.service
-
-[Service]
-Restart=on-failure
-TimeoutSec=infinity
-WorkingDirectory=/home/USER/easynut-docker/
-ExecStart=/usr/local/bin/docker-compose up
-ExecStop=/usr/local/bin/docker-compose down
-
-[Install]
-WantedBy=default.target
-```
-
-Then:
-
-```
-sudo systemctl daemon-reload
-sudo systemctl start easynut.service
-```
-
-Check that the service is well working with:
-
-```
-sudo systemctl status easynut.service
-```
-
-If yes, enable the service:
-
-```
-sudo systemctl enable easynut.service
-```
-
-
 ## II. Structure
 
 This project is composed of six services:
