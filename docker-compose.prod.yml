@@ -26,10 +26,8 @@ services:
         target: /etc/localtime
         read_only: true
     networks:
-      front-end:
-        ipv4_address: 172.20.0.2
-      back-end:
-        ipv4_address: 172.21.0.2
+      - front-end
+      - back-end
     command: [sh, -c, "python manage.py collectstatic --no-input && /wait-for -t 30 mysql:3306 && /wait-for -t 30 redis:6379 -- gunicorn django_easynut.wsgi:application --timeout 300 -w 2 -b :8000"]
     restart: always
   nginx:
@@ -68,8 +66,7 @@ services:
         target: /etc/localtime
         read_only: true
     networks:
-      front-end:
-        ipv4_address: 172.20.0.3
+      - front-end
     command: [sh, -c, "/wait-for -t 90 web:8000 -- nginx -g 'daemon off;'"]
     restart: always
   mysql:
@@ -91,8 +88,7 @@ services:
         target: /etc/localtime
         read_only: true
     networks:
-      back-end:
-        ipv4_address: 172.21.0.4
+      - back-end
     restart: always
   redis:
     image: redis:6-alpine
@@ -105,8 +101,7 @@ services:
         target: /etc/localtime
         read_only: true
     networks:
-      back-end:
-        ipv4_address: 172.21.0.5
+      - back-end
     sysctls:
       - net.core.somaxconn=65535
     restart: always
@@ -130,8 +125,7 @@ services:
         target: /etc/localtime
         read_only: true
     networks:
-      back-end:
-        ipv4_address: 172.21.0.6
+      - back-end
     command: [sh, -c, "/wait-for -t 30 mysql:3306 && /wait-for -t 60 web:8000 -- /run.sh"]
     restart: always
 
@@ -141,15 +135,5 @@ volumes:
 
 networks:
   front-end:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.20.0.0/16
   back-end:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.21.0.0/16
 
