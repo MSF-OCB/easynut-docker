@@ -33,7 +33,7 @@ services:
     command: [sh, -c, "python manage.py collectstatic --no-input && /wait-for -t 30 mysql:3306 && /wait-for -t 30 redis:6379 -- gunicorn django_easynut.wsgi:application --timeout 300 -w 2 -b :8000"]
     restart: always
   nginx:
-    image: nginx:1.13-alpine
+    image: nginx:1.19-alpine
     container_name: easynut_nginx
     ports:
       - "80:80"
