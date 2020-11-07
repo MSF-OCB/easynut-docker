@@ -21,6 +21,10 @@ services:
         source: ./wait-for
         target: /wait-for
         read_only: true
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
     networks:
       front-end:
         ipv4_address: 172.20.0.2
@@ -59,6 +63,10 @@ services:
         source: ./wait-for
         target: /wait-for
         read_only: true
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
     networks:
       front-end:
         ipv4_address: 172.20.0.3
@@ -78,6 +86,10 @@ services:
       - type: volume
         source: mysql_data
         target: /var/lib/mysql
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
     networks:
       back-end:
         ipv4_address: 172.21.0.4
@@ -87,6 +99,11 @@ services:
     container_name: easynut_redis
     expose:
       - "6379"
+    volumes:
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
+        read_only: true
     networks:
       back-end:
         ipv4_address: 172.21.0.5
@@ -107,6 +124,10 @@ services:
       - type: bind
         source: ./wait-for
         target: /wait-for
+        read_only: true
+      - type: bind
+        source: /etc/localtime
+        target: /etc/localtime
         read_only: true
     networks:
       back-end:
