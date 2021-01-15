@@ -73,7 +73,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.easynut.rule=Host(`local.emr.ocb.msf.org`) &&
-          (PathPrefix(`/nut/`) || PathPrefix(`/admin/`))"
+          (PathPrefix(`/nut/`) || PathPrefix(`/admin/`) || PathPrefix(`/static/`))"
       - "traefik.http.routers.easynut.entrypoints=websecure"
       - "traefik.http.routers.easynut.tls.certresolver=letsencrypt_dns"
   mysql:
