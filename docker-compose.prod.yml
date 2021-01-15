@@ -74,7 +74,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.easynut.rule=Host(`local.emr.ocb.msf.org`)"
       - "traefik.http.routers.easynut.entrypoints=websecure"
-      - "traefik.http.routers.myapp.tls.certresolver=letsencrypt_dns"
+      - "traefik.http.routers.easynut.tls.certresolver=letsencrypt_dns"
   mysql:
     image: mysql:5.7
     container_name: easynut_mysql
