@@ -33,8 +33,8 @@ services:
   nginx:
     image: nginx:1.19-alpine
     container_name: easynut_nginx
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     depends_on:
       - web
     volumes:
@@ -67,8 +67,14 @@ services:
         read_only: true
     networks:
       - front-end
+      - web
     command: [sh, -c, "/wait-for -t 90 web:8000 -- nginx -g 'daemon off;'"]
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.easynut.rule=Host(`local.emr.ocb.msf.org`)"
+      - "traefik.http.routers.easynut.entrypoints=websecure"
+      - "traefik.http.routers.myapp.tls.certresolver=letsencrypt_dns"
   mysql:
     image: mysql:5.7
     container_name: easynut_mysql
@@ -136,4 +142,6 @@ volumes:
 networks:
   front-end:
   back-end:
+  web:
+    external: true
 
